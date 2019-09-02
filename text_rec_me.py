@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import time
 from functools import reduce
+from collections import Counter
 
 # A fucntion to create an array of exmaples to train the 
 # image recognition tool
@@ -13,7 +14,6 @@ def create_examples():
 
     for each_num in numbers_we_have:
         for each_version in versions_we_have:
-            #print(str(each_num) + '.' + str(each_version))
             image_file_path = 'images/numbers/' + str(each_num) + '.' + str(each_version) + '.png'
             example_image = Image.open(image_file_path)                       # open each image
             example_image_array = np.array(example_image.getdata())               # create an array of images
@@ -50,37 +50,36 @@ def threshold(image_array):
                 each_pixel[3] = 255
     return new_array
 
-i1 = Image.open('images/numbers/0.1.png')
-image_array1 = np.array(i1)                                       # turn the image pixels into arrays
+def what_num_is_this(file_path):
+    matched_array = []                                          # array to store matched examples
+    load_examples = open('numArx.txt', 'r').read()             # read in the exmaples array
+    load_examples = load_examples.split('\n')                   # split the examples array on new lines
 
-i2 = Image.open('images/numbers/y0.4.png')
-image_array2 = np.array(i2)                                       # turn the image pixels into arrays
+    image = Image.open(file_path)
+    image_array = np.array(image.getdata())
+    image_array_list = image_array.tolist()
 
-i3 = Image.open('images/numbers/y0.5.png')
-image_array3 = np.array(i3)                                       # turn the image pixels into arrays
+    in_question = str(image_array_list)
 
-i4 = Image.open('images/sentdex.png')
-image_array4 = np.array(i4)                                       # turn the image pixels into arrays
+    for each_example in load_examples:
+        if len(each_example) > 3:
+            split_example = each_example.split(('::'))
+            current_num = split_example[0]
+            current_array = split_example[1]
 
+            each_pixel_example = current_array.split(('],'))
 
+            each_pixel_in_question = in_question.split('],')
 
+            x = 0
 
-"""
-threshold(image_array1)
-threshold(image_array2)
-threshold(image_array3)
-threshold(image_array4)
+            while x < len(each_pixel_example):
+                if each_pixel_example[x] == each_pixel_in_question[x]:
+                    matched_array.append((int(current_num)))
+                x += 1
 
-fig = plt.figure()                                                  # create a figure to plot 4 exmaple numbers
-ax1 = plt.subplot2grid((8,6), (0,0), rowspan=4, colspan=3)          # create positions of the subplots
-ax2 = plt.subplot2grid((8,6), (4,0), rowspan=4, colspan=3)      
-ax3 = plt.subplot2grid((8,6), (0,3), rowspan=4, colspan=3)      
-ax4 = plt.subplot2grid((8,6), (4,3), rowspan=4, colspan=3)      
+    print(matched_array)
+    y = Counter(matched_array)
+    print(y)
 
-ax1.imshow(image_array1)                                            # place image arrays on subplots
-ax2.imshow(image_array2)
-ax3.imshow(image_array3)
-ax4.imshow(image_array4)
-
-plt.show()
-"""
+what_num_is_this('images/test.png')
