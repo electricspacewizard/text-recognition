@@ -8,22 +8,19 @@ from functools import reduce
 # image recognition tool
 def create_examples():
     number_array_exmaples = open('numArx.txt', 'a')                 # File does not exist at the start of the script
-    numbers_we_have = range(0, 10)                                  # Range of characters
-    versions_we_have = range(1, 10)                                 # Number of each example
+    numbers_we_have = range(0, 10)                                  # Range of characters from 0 to 9
+    versions_we_have = range(1, 10)                                 # Number of each example 1 to 9
 
     for each_num in numbers_we_have:
         for each_version in versions_we_have:
             #print(str(each_num) + '.' + str(each_version))
             image_file_path = 'images/numbers/' + str(each_num) + '.' + str(each_version) + '.png'
-            example_image = open(image_file_path)                       # open each image
-            example_image_array = np.array(example_image)               # create an array of images
+            example_image = Image.open(image_file_path)                       # open each image
+            example_image_array = np.array(example_image.getdata())               # create an array of images
             example_image_array1 = str(example_image_array.tolist())    # convert the array to list
-            print(example_image_array1)
-
-            """
             line_to_write = str(each_num) + '::' + example_image_array1 + '\n'
             number_array_exmaples.write(line_to_write)
-            """
+
 create_examples()
 
 
