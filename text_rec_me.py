@@ -52,22 +52,22 @@ def threshold(image_array):
 
 def what_num_is_this(file_path):
     matched_array = []                                          # array to store matched examples
-    load_examples = open('numArx.txt', 'r').read()             # read in the exmaples array
+    load_examples = open('numArx.txt', 'r').read()              # read in the exmaples array
     load_examples = load_examples.split('\n')                   # split the examples array on new lines
 
     image = Image.open(file_path)
-    image_array = np.array(image.getdata())
+    image_array = np.array(image)
     image_array_list = image_array.tolist()
 
     in_question = str(image_array_list)
 
     for each_example in load_examples:
         if len(each_example) > 3:
-            split_example = each_example.split(('::'))
+            split_example = each_example.split('::')
             current_num = split_example[0]
             current_array = split_example[1]
 
-            each_pixel_example = current_array.split(('],'))
+            each_pixel_example = current_array.split('],')
 
             each_pixel_in_question = in_question.split('],')
 
@@ -75,7 +75,7 @@ def what_num_is_this(file_path):
 
             while x < len(each_pixel_example):
                 if each_pixel_example[x] == each_pixel_in_question[x]:
-                    matched_array.append((int(current_num)))
+                    matched_array.append(int(current_num))
                 x += 1
 
     print(matched_array)
